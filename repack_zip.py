@@ -16,7 +16,7 @@ import json
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-NEW_VERSION = 10
+NEW_VERSION = 11
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Xác định các đường dẫn tương đối để chạy di động
