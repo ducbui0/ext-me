@@ -2,10 +2,10 @@
   "metadata": {
     "name": "twkan Pro",
     "author": "ducbui0",
-    "version": 1,
+    "version": 2,
     "source": "https://twkan.com",
     "regexp": "twkan\\.com/(txt|book)/.*",
-    "description": "Đọc truyện chữ Trung trên twkan.com (cải tiến: giải mã đoạn ẩn canvas sec-last, lọc triệt để watermark quảng cáo, làm sạch mô tả và trạng thái truyện).",
+    "description": "Đọc truyện chữ Trung trên twkan.com (cải tiến: giải mã canvas sec-last, tự cảnh báo khi web đổi khóa giải mã, lọc triệt để watermark quảng cáo, làm sạch mô tả).",
     "locale": "zh_CN",
     "language": "javascript",
     "type": "chinese_novel"

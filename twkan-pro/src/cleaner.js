@@ -1,4 +1,5 @@
 var TWKAN_SEC_KEY = 'jieqi2026abcd12';
+var TWKAN_SEC_KNOWN_VER = '20260916b';
 var _B64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 function decodeBase64ToBytes(b64) {
@@ -27,30 +28,103 @@ function decodeBase64ToBytes(b64) {
     return out;
 }
 
-function decodeUtf8Bytes(bytes) {
+function decodeUtf8BytesStrict(bytes) {
     var out = '';
     var i = 0;
     var len = bytes.length;
     while (i < len) {
         var b1 = bytes[i++] & 0xff;
         if (b1 < 0x80) {
+            if ((b1 < 0x20 && b1 !== 9 && b1 !== 10 && b1 !== 13) || b1 === 0x7f) {
+                return {ok: false, text: '', reason: 'invalid_utf8'};
+            }
             out += String.fromCharCode(b1);
-        } else if ((b1 & 0xe0) === 0xc0 && i < len) {
-            var b2 = bytes[i++] & 0x3f;
-            out += String.fromCharCode(((b1 & 0x1f) << 6) | b2);
-        } else if ((b1 & 0xf0) === 0xe0 && i + 1 < len) {
-            var c2 = bytes[i++] & 0x3f;
-            var c3 = bytes[i++] & 0x3f;
-            out += String.fromCharCode(((b1 & 0x0f) << 12) | (c2 << 6) | c3);
-        } else if ((b1 & 0xf8) === 0xf0 && i + 2 < len) {
-            var d2 = bytes[i++] & 0x3f;
-            var d3 = bytes[i++] & 0x3f;
-            var d4 = bytes[i++] & 0x3f;
-            var cp = (((b1 & 0x07) << 18) | (d2 << 12) | (d3 << 6) | d4) - 0x10000;
-            out += String.fromCharCode(0xd800 + (cp >> 10), 0xdc00 + (cp & 0x3ff));
+        } else if (b1 >= 0xc2 && b1 <= 0xdf) {
+            if (i >= len) return {ok: false, text: '', reason: 'invalid_utf8'};
+            var b2 = bytes[i++] & 0xff;
+            if ((b2 & 0xc0) !== 0x80) return {ok: false, text: '', reason: 'invalid_utf8'};
+            var cp2 = ((b1 & 0x1f) << 6) | (b2 & 0x3f);
+            if (cp2 >= 0x80 && cp2 <= 0x9f) return {ok: false, text: '', reason: 'invalid_utf8'};
+            out += String.fromCharCode(cp2);
+        } else if (b1 >= 0xe0 && b1 <= 0xef) {
+            if (i + 1 >= len) return {ok: false, text: '', reason: 'invalid_utf8'};
+            var c2 = bytes[i++] & 0xff;
+            var c3 = bytes[i++] & 0xff;
+            if ((c2 & 0xc0) !== 0x80 || (c3 & 0xc0) !== 0x80) return {ok: false, text: '', reason: 'invalid_utf8'};
+            if (b1 === 0xe0 && c2 < 0xa0) return {ok: false, text: '', reason: 'invalid_utf8'};
+            if (b1 === 0xed && c2 > 0x9f) return {ok: false, text: '', reason: 'invalid_utf8'};
+            out += String.fromCharCode(((b1 & 0x0f) << 12) | ((c2 & 0x3f) << 6) | (c3 & 0x3f));
+        } else if (b1 >= 0xf0 && b1 <= 0xf4) {
+            if (i + 2 >= len) return {ok: false, text: '', reason: 'invalid_utf8'};
+            var d2 = bytes[i++] & 0xff;
+            var d3 = bytes[i++] & 0xff;
+            var d4 = bytes[i++] & 0xff;
+            if ((d2 & 0xc0) !== 0x80 || (d3 & 0xc0) !== 0x80 || (d4 & 0xc0) !== 0x80) {
+                return {ok: false, text: '', reason: 'invalid_utf8'};
+            }
+            if (b1 === 0xf0 && d2 < 0x90) return {ok: false, text: '', reason: 'invalid_utf8'};
+            if (b1 === 0xf4 && d2 > 0x8f) return {ok: false, text: '', reason: 'invalid_utf8'};
+            var cp4 = (((b1 & 0x07) << 18) | ((d2 & 0x3f) << 12) | ((d3 & 0x3f) << 6) | (d4 & 0x3f)) - 0x10000;
+            out += String.fromCharCode(0xd800 + (cp4 >> 10), 0xdc00 + (cp4 & 0x3ff));
+        } else {
+            return {ok: false, text: '', reason: 'invalid_utf8'};
         }
     }
-    return out;
+    return {ok: true, text: out, reason: ''};
+}
+
+function decodeUtf8Bytes(bytes) {
+    var r = decodeUtf8BytesStrict(bytes);
+    return r.ok ? r.text : '';
+}
+
+function _isDisallowedTextBlock(c) {
+    return (c >= 0x0590 && c <= 0x1fff) ||
+        (c >= 0xa000 && c <= 0xd7af) ||
+        (c >= 0xe000 && c <= 0xf8ff) ||
+        (c >= 0xfb00 && c <= 0xfdff) ||
+        (c >= 0xfe70 && c <= 0xfeff) ||
+        (c >= 0xfff0 && c <= 0xffff);
+}
+
+function _isPlausibleDecodedText(text) {
+    if (!text || !text.length) return false;
+    var readable = 0;
+    var total = 0;
+    for (var i = 0; i < text.length; i++) {
+        var c = text.charCodeAt(i);
+        if (_isDisallowedTextBlock(c)) return false;
+        if ((c < 0x20 && c !== 9 && c !== 10 && c !== 13) || c === 0x7f || (c >= 0x80 && c <= 0x9f)) {
+            return false;
+        }
+        if (c >= 0xd800 && c <= 0xdbff && i + 1 < text.length) {
+            var lo = text.charCodeAt(i + 1);
+            if (lo >= 0xdc00 && lo <= 0xdfff) {
+                var cp = 0x10000 + ((c - 0xd800) << 10) + (lo - 0xdc00);
+                i++;
+                total++;
+                if ((cp >= 0x20000 && cp <= 0x2ebef) || (cp >= 0x30000 && cp <= 0x323af)) {
+                    readable++;
+                }
+                continue;
+            }
+            return false;
+        }
+        if (c >= 0xdc00 && c <= 0xdfff) return false;
+        total++;
+        if ((c >= 0x4e00 && c <= 0x9fff) ||
+            (c >= 0x3400 && c <= 0x4dbf) ||
+            (c >= 0xf900 && c <= 0xfaff) ||
+            (c >= 0x3000 && c <= 0x303f) ||
+            (c >= 0xff00 && c <= 0xffef) ||
+            (c >= 0x20 && c <= 0x7e) ||
+            (c >= 0x2000 && c <= 0x206f) ||
+            c === 9 || c === 10 || c === 13 ||
+            c === 0x00a0 || c === 0x00b7) {
+            readable++;
+        }
+    }
+    return total > 0 && (readable / total) >= 0.95;
 }
 
 function decodeHtmlEntities(s) {
@@ -58,6 +132,13 @@ function decodeHtmlEntities(s) {
         .replace(/&emsp;/gi, '\u2003')
         .replace(/&ensp;/gi, '\u2002')
         .replace(/&nbsp;/gi, ' ')
+        .replace(/&mdash;/gi, '\u2014')
+        .replace(/&ndash;/gi, '\u2013')
+        .replace(/&hellip;/gi, '\u2026')
+        .replace(/&ldquo;/gi, '\u201c')
+        .replace(/&rdquo;/gi, '\u201d')
+        .replace(/&lsquo;/gi, '\u2018')
+        .replace(/&rsquo;/gi, '\u2019')
         .replace(/&quot;/gi, '"')
         .replace(/&apos;|&#0*39;/gi, "'")
         .replace(/&lt;/gi, '<')
@@ -93,10 +174,13 @@ function _extractAttr(attrs, name) {
     return m[1] !== undefined ? m[1] : (m[2] !== undefined ? m[2] : '');
 }
 
-function decodeSecLastPayload(dataC, dataV) {
-    if (!dataC || !dataV) return '';
+function decodeSecLastPayloadStrict(dataC, dataV) {
+    if (!dataC || !dataV) return {ok: false, text: '', reason: 'missing_attrs'};
+    if (!/^[A-Za-z0-9+/=_\-\s]+$/.test(String(dataC))) {
+        return {ok: false, text: '', reason: 'invalid_base64'};
+    }
     var raw = decodeBase64ToBytes(dataC);
-    if (!raw.length) return '';
+    if (!raw.length) return {ok: false, text: '', reason: 'empty_payload'};
     var k1 = TWKAN_SEC_KEY;
     var k1Len = k1.length;
     var k2Len = dataV.length;
@@ -104,33 +188,74 @@ function decodeSecLastPayload(dataC, dataV) {
     for (var i = 0; i < raw.length; i++) {
         out[i] = raw[i] ^ (k1.charCodeAt(i % k1Len) & 0xff) ^ (dataV.charCodeAt(i % k2Len) & 0xff);
     }
-    var decoded = decodeUtf8Bytes(out);
+    var utf8Res = decodeUtf8BytesStrict(out);
+    if (!utf8Res.ok) return {ok: false, text: '', reason: utf8Res.reason};
+
     // Match reader-sec.js (_0x3f48c2 sets innerHTML then reads textContent)
-    decoded = decoded.replace(/<\s*br\s*\/?\s*>/gi, '\n').replace(/<[^>]+>/g, '');
+    var decoded = utf8Res.text.replace(/<\s*br\s*\/?\s*>/gi, '\n').replace(/<[^>]+>/g, '');
     decoded = decodeHtmlEntities(decoded);
+    if (/&[a-z]{2,10};/i.test(decoded)) {
+        return {ok: false, text: '', reason: 'corrupted_entity'};
+    }
     decoded = decoded.replace(/^[\s\u00a0\u2002\u2003\u3000]+|[\s\u00a0\u2002\u2003\u3000]+$/g, '');
-    return decoded;
+    if (!_isPlausibleDecodedText(decoded)) {
+        return {ok: false, text: '', reason: 'unreadable_text'};
+    }
+    return {ok: true, text: decoded, reason: ''};
 }
 
-function decodeSecLastCanvases(html) {
-    return String(html || '').replace(/<canvas\b([^>]*)>(?:[\s\S]*?<\/canvas>)?/gi, function (_, attrs) {
+function decodeSecLastPayload(dataC, dataV) {
+    var r = decodeSecLastPayloadStrict(dataC, dataV);
+    return r.ok ? r.text : '';
+}
+
+function decodeSecLastCanvasesDetailed(html) {
+    var decodedCount = 0;
+    var failedCount = 0;
+    var failReason = '';
+    var replaced = String(html || '').replace(/<canvas\b([^>]*)>(?:[\s\S]*?<\/canvas>)?/gi, function (_, attrs) {
         try {
+            var cls = _extractAttr(attrs, 'class');
             var dataC = _extractAttr(attrs, 'data-c');
             var dataV = _extractAttr(attrs, 'data-v');
-            if (!dataC || !dataV) return '';
-            var text = decodeSecLastPayload(dataC, dataV);
-            if (!text) return '';
-            var lines = text.split(/\r?\n/);
+            var isSecCanvas = /(?:^|\s)sec-last(?:\s|$)/i.test(cls) || !!dataC || !!dataV;
+            if (!isSecCanvas) return '';
+
+            var res = decodeSecLastPayloadStrict(dataC, dataV);
+            if (!res.ok) {
+                failedCount++;
+                if (!failReason) failReason = res.reason;
+                return '';
+            }
+            var lines = res.text.split(/\r?\n/);
             var htmlLines = [];
             for (var i = 0; i < lines.length; i++) {
                 var t = lines[i].replace(/^[\s\u00a0\u2002\u2003\u3000]+|[\s\u00a0\u2002\u2003\u3000]+$/g, '');
                 if (t) htmlLines.push(_escapeHtmlText(t));
             }
+            if (!htmlLines.length) {
+                failedCount++;
+                if (!failReason) failReason = 'empty_decoded_text';
+                return '';
+            }
+            decodedCount++;
             return htmlLines.join('<br>\n');
         } catch (e) {
+            failedCount++;
+            if (!failReason) failReason = 'exception';
             return '';
         }
     });
+    return {
+        html: replaced,
+        decodedCount: decodedCount,
+        failedCount: failedCount,
+        failReason: failReason
+    };
+}
+
+function decodeSecLastCanvases(html) {
+    return decodeSecLastCanvasesDetailed(html).html;
 }
 
 var _BMP_SPECIAL_MAP = {
@@ -245,9 +370,9 @@ function _stripInlineWatermarks(line) {
         .trim();
 }
 
-function cleanChapterHtml(html) {
-    var s = decodeSecLastCanvases(html);
-    s = s
+function cleanChapterHtmlDetailed(html) {
+    var sec = decodeSecLastCanvasesDetailed(html);
+    var s = sec.html
         .replace(/<!--[\s\S]*?-->/g, '')
         .replace(/[\u200b-\u200d\ufeff]/g, '')
         .replace(/&nbsp;/gi, ' ')
@@ -280,7 +405,37 @@ function cleanChapterHtml(html) {
         kept.push(line);
     }
 
-    return kept.join('<br>\n');
+    return {
+        html: kept.join('<br>\n'),
+        decodedCount: sec.decodedCount,
+        failedCount: sec.failedCount,
+        failReason: sec.failReason
+    };
+}
+
+function cleanChapterHtml(html) {
+    return cleanChapterHtmlDetailed(html).html;
+}
+
+function extractSecScriptUrl(doc) {
+    var found = '';
+    if (!doc) return '';
+    try {
+        doc.select('script[src]').forEach(function (el) {
+            if (found) return;
+            var src = String(el.attr('src') || '');
+            if (/reader-sec\.js/i.test(src)) {
+                found = src;
+            }
+        });
+    } catch (e) {
+    }
+    return found;
+}
+
+function extractSecScriptVersion(src) {
+    var m = String(src || '').match(/[?&]v=([^&#]+)/i);
+    return m ? m[1] : '';
 }
 
 function cleanPlainText(s) {

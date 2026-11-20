@@ -19,10 +19,10 @@
       "name": "twkan Pro",
       "author": "ducbui0",
       "path": "https://raw.githubusercontent.com/ducbui0/ext-me/main/twkan-pro/plugin.zip",
-      "version": 1,
+      "version": 2,
       "source": "https://twkan.com",
       "icon": "https://raw.githubusercontent.com/ducbui0/ext-me/main/twkan-pro/icon.png",
-      "description": "Đọc truyện chữ Trung trên twkan.com (giải mã canvas sec-last, lọc watermark quảng cáo, làm sạch mô tả).",
+      "description": "Đọc truyện chữ Trung trên twkan.com (giải mã canvas sec-last, tự báo lỗi nếu web đổi khóa, lọc watermark, làm sạch mô tả).",
       "type": "chinese_novel",
       "locale": "zh_CN"
     }
