@@ -1,7 +1,7 @@
 {
   "metadata": {
     "author": "ducbui0",
-    "description": "Extension đồng bộ Tomato Novel Downloader"
+    "description": "Kho extension cá nhân của ducbui0 (Tomato Novel Sync, twkan Pro)"
   },
   "data": [
     {
@@ -12,6 +12,17 @@
       "source": "http://192.168.100.51:18423",
       "icon": "https://raw.githubusercontent.com/ducbui0/ext-me/main/icon.png",
       "description": "Đồng bộ và đọc truyện đã tải bằng Tomato Novel Downloader từ máy tính của bạn qua Wi-Fi.",
+      "type": "chinese_novel",
+      "locale": "zh_CN"
+    },
+    {
+      "name": "twkan Pro",
+      "author": "ducbui0",
+      "path": "https://raw.githubusercontent.com/ducbui0/ext-me/main/twkan-pro/plugin.zip",
+      "version": 1,
+      "source": "https://twkan.com",
+      "icon": "https://raw.githubusercontent.com/ducbui0/ext-me/main/twkan-pro/icon.png",
+      "description": "Đọc truyện chữ Trung trên twkan.com (giải mã canvas sec-last, lọc watermark quảng cáo, làm sạch mô tả).",
       "type": "chinese_novel",
       "locale": "zh_CN"
     }
