@@ -19,7 +19,7 @@
       "name": "twkan Pro",
       "author": "ducbui0",
       "path": "https://raw.githubusercontent.com/ducbui0/ext-me/main/twkan-pro/plugin.zip",
-      "version": 2,
+      "version": 3,
       "source": "https://twkan.com",
       "icon": "https://raw.githubusercontent.com/ducbui0/ext-me/main/twkan-pro/icon.png",
       "description": "Đọc truyện chữ Trung trên twkan.com (giải mã canvas sec-last, tự báo lỗi nếu web đổi khóa, lọc watermark, làm sạch mô tả).",

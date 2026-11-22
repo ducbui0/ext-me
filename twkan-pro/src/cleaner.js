@@ -260,28 +260,61 @@ function decodeSecLastCanvases(html) {
 
 var _BMP_SPECIAL_MAP = {
     // Letterlike Symbols holes in Mathematical Alphanumerics
-    0x2102: 'c', 0x210a: 'g', 0x210b: 'h', 0x210c: 'h', 0x210d: 'h', 0x210e: 'h',
+    0x2102: 'c', 0x2103: 'c', 0x210a: 'g', 0x210b: 'h', 0x210c: 'h', 0x210d: 'h', 0x210e: 'h',
     0x210f: 'h', 0x2110: 'i', 0x2111: 'i', 0x2112: 'l', 0x2113: 'l', 0x2115: 'n',
     0x2119: 'p', 0x211a: 'q', 0x211b: 'r', 0x211c: 'r', 0x211d: 'r', 0x2124: 'z',
     0x2128: 'z', 0x212c: 'b', 0x212d: 'c', 0x212f: 'e', 0x2130: 'e', 0x2131: 'f',
     0x2133: 'm', 0x2134: 'o', 0x2139: 'i',
+    // Circled / Dingbat digits & superscripts
+    0x24ea: '0', 0x24ff: '0',
+    0x2776: '1', 0x2777: '2', 0x2778: '3', 0x2779: '4', 0x277a: '5',
+    0x277b: '6', 0x277c: '7', 0x277d: '8', 0x277e: '9',
+    0x2780: '1', 0x2781: '2', 0x2782: '3', 0x2783: '4', 0x2784: '5',
+    0x2785: '6', 0x2786: '7', 0x2787: '8', 0x2788: '9',
+    0x278a: '1', 0x278b: '2', 0x278c: '3', 0x278d: '4', 0x278e: '5',
+    0x278f: '6', 0x2790: '7', 0x2791: '8', 0x2792: '9',
+    0x24f5: '1', 0x24f6: '2', 0x24f7: '3', 0x24f8: '4', 0x24f9: '5',
+    0x24fa: '6', 0x24fb: '7', 0x24fc: '8', 0x24fd: '9',
+    0x2070: '0', 0x00b9: '1', 0x00b2: '2', 0x00b3: '3', 0x2074: '4',
+    0x2075: '5', 0x2076: '6', 0x2077: '7', 0x2078: '8', 0x2079: '9',
+    0x02e2: 's', 0x02b0: 'h', 0x1d58: 'u', 0x02e3: 'x', 0x1d9c: 'c', 0x1d52: 'o', 0x1d50: 'm',
     // Small caps & IPA / Latin Extended / Greek / Cyrillic / Thai / Hebrew homoglyphs
     0x1d00: 'a', 0x1d04: 'c', 0x1d05: 'd', 0x1d07: 'e', 0x0262: 'g', 0x029c: 'h',
     0x026a: 'i', 0x1d0a: 'j', 0x1d0b: 'k', 0x029f: 'l', 0x1d0d: 'm', 0x0274: 'n',
     0x1d0f: 'o', 0x1d18: 'p', 0x0280: 'r', 0x1d1b: 't', 0x1d1c: 'u', 0x1d20: 'v',
     0x1d21: 'w', 0x028f: 'y', 0x1d22: 'z',
-    0x019a: 't', 0x026f: 'w', 0x0199: 'k', 0x03b1: 'a', 0x0273: 'n', 0x0188: 'c',
+    0x019a: 't', 0x026f: 'm', 0x0265: 'h', 0x02d9: '.', 0x0199: 'k', 0x03b1: 'a', 0x0273: 'n', 0x0188: 'c',
     0x03c3: 'o', 0x0271: 'm', 0x0272: 'n', 0x027e: 'r', 0x01ab: 't', 0x0192: 'f',
-    0x0203: 'a', 0x0202: 'a', 0x0103: 'a', 0x0102: 'a', 0x00e0: 'a', 0x00e1: 'a',
-    0x00e2: 'a', 0x00e3: 'a', 0x00e4: 'a', 0x00e5: 'a', 0x0101: 'a',
+    0x0282: 's', 0x0267: 'h', 0x0173: 'u', 0x01a1: 'o', 0x0254: 'c', 0x00a2: 'c',
+    0x00f8: 'o', 0x00d8: 'o', 0x0127: 'h', 0x0126: 'h', 0x0124: 'h', 0x0125: 'h',
+    0x015c: 's', 0x015d: 's', 0x015e: 's', 0x015f: 's', 0x0160: 's', 0x0161: 's',
+    0x0106: 'c', 0x0107: 'c', 0x010c: 'c', 0x010d: 'c', 0x00e7: 'c', 0x00c7: 'c',
+    0x01d7: 'u', 0x01d8: 'u', 0x00f9: 'u', 0x00fa: 'u', 0x00fb: 'u', 0x00fc: 'u',
+    0x1ed6: 'o', 0x1ed7: 'o', 0x0203: 'a', 0x0202: 'a', 0x0103: 'a', 0x0102: 'a',
+    0x00e0: 'a', 0x00e1: 'a', 0x00e2: 'a', 0x00e3: 'a', 0x00e4: 'a', 0x00e5: 'a', 0x0101: 'a',
     0x020f: 'o', 0x020e: 'o', 0x014f: 'o', 0x014e: 'o', 0x00f2: 'o', 0x00f3: 'o',
     0x00f4: 'o', 0x00f5: 'o', 0x00f6: 'o', 0x014d: 'o', 0x03cc: 'o', 0x03bf: 'o',
-    0x015f: 's', 0x0161: 's', 0x043d: 'h', 0x0430: 'a', 0x0435: 'e', 0x043e: 'o',
-    0x0440: 'p', 0x0441: 'c', 0x0445: 'x', 0x03c5: 'u', 0x03ba: 'k', 0x03bd: 'n',
-    0x03c4: 't', 0x03c9: 'w', 0x03c2: 'c',
-    0x0e23: 's', 0x0452: 'h', 0x0e22: 'u', 0x05d0: 'x', 0x0e4f: 'o', 0x0e53: 'm',
-    0x0431: '6', 0x2079: '9',
-    0x2024: '.', 0x2027: '.', 0xff0e: '.', 0x3002: '.', 0x24b6: 'a'
+    // Cyrillic / Greek / Thai / Hebrew
+    0x043d: 'h', 0x041d: 'h', 0x04bb: 'h', 0x04ba: 'h', 0x0452: 'h', 0x0402: 'h', 0x045b: 'h', 0x040b: 'h',
+    0x0430: 'a', 0x0410: 'a', 0x0432: 'b', 0x0412: 'b', 0x0435: 'e', 0x0415: 'e',
+    0x043e: 'o', 0x041e: 'o', 0x0440: 'p', 0x0420: 'p', 0x0441: 'c', 0x0421: 'c',
+    0x043a: 'k', 0x041a: 'k', 0x043c: 'm', 0x041c: 'm', 0x0442: 't', 0x0422: 't',
+    0x0443: 'y', 0x0423: 'y', 0x0455: 's', 0x0405: 's', 0xa645: 's', 0xa644: 's',
+    0x0445: 'x', 0x0425: 'x', 0x04b3: 'x', 0x04b2: 'x', 0x0416: 'x', 0x0436: 'x',
+    0x0391: 'a', 0x03b5: 'e', 0x03b9: 'i', 0x039a: 'k', 0x039c: 'm', 0x03bc: 'm', 0x03fb: 'm',
+    0x039f: 'o', 0x03c1: 'p', 0x03c5: 'u', 0x03ba: 'k', 0x03bd: 'n', 0x03c4: 't', 0x03c9: 'w',
+    0x03c2: 'c', 0x03f2: 'c', 0x03c7: 'x', 0x03a7: 'x',
+    0x0e23: 's', 0x0e22: 'u', 0x05d0: 'x', 0x0e4f: 'o', 0x0e53: 'm',
+    0x0431: '6',
+    // Canadian Aboriginal / Hiragana / Katakana / Hangul / CJK lookalikes
+    0x1515: 's', 0x157c: 'h', 0x144c: 'u', 0x1458: 'u', 0x166d: 'x',
+    0x1455: 'c', 0x1462: 'c', 0x15dd: 'o', 0x14cd: 'o', 0x15f0: 'm', 0x163b: 'm',
+    0x4e02: 's', 0x531a: 'c', 0x722a: 'm', 0x4e42: 'x', 0x3116: 'o', 0x5344: 'h',
+    0x3093: 'h', 0x3072: 'u', 0x306e: 'o', 0xff92: 'x', 0x30e1: 'x',
+    0x1103: 'c', 0x3137: 'c', 0xffb6: 'm',
+    0x262f: 'o', 0x26bd: 'o', 0x2b55: 'o',
+    // Dot lookalikes (KHÔNG map 0x3002 '。' để không dính dấu câu tiếng Trung)
+    0x2024: '.', 0x2027: '.', 0xff0e: '.', 0xfe52: '.', 0xff61: '.', 0x00b7: '.'
 };
 
 function _isCombiningOrInvisible(code) {
@@ -292,7 +325,44 @@ function _isCombiningOrInvisible(code) {
         (code >= 0x20d0 && code <= 0x20ff) ||
         (code >= 0xfe20 && code <= 0xfe2f) ||
         (code >= 0x200b && code <= 0x200f) ||
-        code === 0xfeff || code === 0x00ad;
+        code === 0xfeff || code === 0x00ad || code === 0xfe0e || code === 0xfe0f;
+}
+
+function _mapWatermarkCodePoint(cp) {
+    // Surrogate-pair Mathematical Alphanumerics & Squared Latin & emoji 'o'
+    if (cp >= 0x1d400 && cp <= 0x1d6a3) {
+        var offset = (cp - 0x1d400) % 52;
+        return { ch: String.fromCharCode(97 + (offset % 26)), obf: true };
+    }
+    if (cp >= 0x1d7ce && cp <= 0x1d7ff) {
+        return { ch: String.fromCharCode(48 + ((cp - 0x1d7ce) % 10)), obf: true };
+    }
+    if (cp >= 0x1f130 && cp <= 0x1f149) return { ch: String.fromCharCode(97 + (cp - 0x1f130)), obf: true };
+    if (cp >= 0x1f150 && cp <= 0x1f169) return { ch: String.fromCharCode(97 + (cp - 0x1f150)), obf: true };
+    if (cp >= 0x1f170 && cp <= 0x1f189) return { ch: String.fromCharCode(97 + (cp - 0x1f170)), obf: true };
+    if (cp === 0x1f48d || cp === 0x1f518 || cp === 0x1f4bf || cp === 0x1f36a || cp === 0x1f369) {
+        return { ch: 'o', obf: true };
+    }
+    // Circled & Parenthesized Latin (Ⓐ-ⓩ, ⒜-⒵)
+    if (cp >= 0x24b6 && cp <= 0x24cf) return { ch: String.fromCharCode(97 + (cp - 0x24b6)), obf: true };
+    if (cp >= 0x24d0 && cp <= 0x24e9) return { ch: String.fromCharCode(97 + (cp - 0x24d0)), obf: true };
+    if (cp >= 0x249c && cp <= 0x24b5) return { ch: String.fromCharCode(97 + (cp - 0x249c)), obf: true };
+    if (cp >= 0x2460 && cp <= 0x2468) return { ch: String.fromCharCode(49 + (cp - 0x2460)), obf: true };
+    // Fullwidth ASCII
+    if (cp >= 0xff01 && cp <= 0xff5e) {
+        var fw = cp - 0xfee0;
+        if (fw >= 65 && fw <= 90) return { ch: String.fromCharCode(fw + 32), obf: true };
+        if ((fw >= 97 && fw <= 122) || (fw >= 48 && fw <= 57) || fw === 46 || fw === 45) {
+            return { ch: String.fromCharCode(fw), obf: true };
+        }
+    }
+    var mapped = _BMP_SPECIAL_MAP[cp];
+    if (mapped) return { ch: mapped, obf: true };
+    if (cp >= 65 && cp <= 90) return { ch: String.fromCharCode(cp + 32), obf: false };
+    if ((cp >= 97 && cp <= 122) || (cp >= 48 && cp <= 57) || cp === 46 || cp === 45 || cp === 47 || cp === 58) {
+        return { ch: String.fromCharCode(cp), obf: false };
+    }
+    return null;
 }
 
 function normalizeForWatermarkCheck(str) {
@@ -300,35 +370,303 @@ function normalizeForWatermarkCheck(str) {
     var out = '';
     for (var i = 0; i < s.length; i++) {
         var hi = s.charCodeAt(i);
+        var cp = hi;
         if (hi >= 0xd800 && hi <= 0xdbff && i + 1 < s.length) {
             var lo = s.charCodeAt(i + 1);
             if (lo >= 0xdc00 && lo <= 0xdfff) {
-                var cp = 0x10000 + ((hi - 0xd800) << 10) + (lo - 0xdc00);
+                cp = 0x10000 + ((hi - 0xd800) << 10) + (lo - 0xdc00);
                 i++;
-                if (cp >= 0x1d400 && cp <= 0x1d6a3) {
-                    var offset = (cp - 0x1d400) % 52;
-                    out += String.fromCharCode(97 + (offset % 26));
-                } else if (cp >= 0x1d7ce && cp <= 0x1d7ff) {
-                    out += String.fromCharCode(48 + ((cp - 0x1d7ce) % 10));
-                } else if (cp >= 0x1f130 && cp <= 0x1f149) {
-                    out += String.fromCharCode(97 + (cp - 0x1f130));
-                }
+            }
+        }
+        if (cp <= 0xffff && _isCombiningOrInvisible(cp)) continue;
+        var m = _mapWatermarkCodePoint(cp);
+        if (m) {
+            out += m.ch;
+        } else if (cp <= 0xffff) {
+            out += String.fromCharCode(cp);
+        }
+    }
+    return out;
+}
+
+function _isStrongDecorativeCp(cp) {
+    if (cp >= 0x1f000) return true;
+    if (cp >= 0x2190 && cp <= 0x21ff) return true;
+    if (cp >= 0x2300 && cp <= 0x23ff) return true;
+    if (cp >= 0x2500 && cp <= 0x27bf) return true;
+    if (cp >= 0x2b00 && cp <= 0x2bff) return true;
+    if (cp === 0x0d60 || cp === 0x0d8f || cp === 0x0e51 || cp === 0x06de || cp === 0x06e9) return true;
+    return cp === 0x00a4 || cp === 0x00a7 || cp === 0x00af || cp === 0x00b0 || cp === 0x00b4 ||
+        cp === 0x00b7 || cp === 0x00b8 || cp === 0x00ba || cp === 0x00d7 || cp === 0x00f7 ||
+        cp === 0x00f8 || cp === 0x00ab || cp === 0x00bb || cp === 0x00a8 || cp === 0x2022 ||
+        cp === 0x2039 || cp === 0x203a;
+}
+
+function _isInterleaveNoiseCp(cp) {
+    if (cp === 32 || cp === 9 || cp === 0x00a0 || (cp >= 0x2000 && cp <= 0x200f) || cp === 0x3000) return true;
+    if (cp === 95 || cp === 42 || cp === 126 || cp === 0x00b7 || cp === 0x2022 || cp === 0x00b0) return true;
+    return (cp >= 0x2500 && cp <= 0x27bf) || cp >= 0x1f000;
+}
+
+function _isInlineSpaceCp(cp) {
+    return cp === 32 || cp === 9 || cp === 0x00a0 || (cp >= 0x2000 && cp <= 0x200a) || cp === 0x3000;
+}
+
+function _isWideSpaceCp(cp) {
+    return (cp >= 0x2000 && cp <= 0x200a) || cp === 0x3000;
+}
+
+function _codePointAtCompat(s, i) {
+    var hi = s.charCodeAt(i);
+    if (hi >= 0xd800 && hi <= 0xdbff && i + 1 < s.length) {
+        var lo = s.charCodeAt(i + 1);
+        if (lo >= 0xdc00 && lo <= 0xdfff) {
+            return { cp: 0x10000 + ((hi - 0xd800) << 10) + (lo - 0xdc00), len: 2 };
+        }
+    }
+    return { cp: hi, len: 1 };
+}
+
+function _codePointBeforeCompat(s, i) {
+    var lo = s.charCodeAt(i - 1);
+    if (lo >= 0xdc00 && lo <= 0xdfff && i - 2 >= 0) {
+        var hi = s.charCodeAt(i - 2);
+        if (hi >= 0xd800 && hi <= 0xdbff) {
+            return { cp: 0x10000 + ((hi - 0xd800) << 10) + (lo - 0xdc00), len: 2 };
+        }
+    }
+    return { cp: lo, len: 1 };
+}
+
+var _LEFT_BANNER_RE = /(?:(?:\.o0×X×0o\.|\(-_-\)|•\]|\([¯´`☆✭★v¸._\s]+\)|[«»¤*·•°øº¸¯´`§¨'÷×░▒▓█๑۞۩★☆✭♩♪♫♬\-=~\^_,\s.])+)$/;
+var _RIGHT_BANNER_RE = /^(?:(?:\.o0×X×0o\.|\(-_-\)|\[•|\([¯´`☆✭★v¸._\s]+\)|[«»¤*·•°øº¸¯´`§¨'÷×░▒▓█๑۞۩★☆✭♩♪♫♬\-=~\^_,\s.])+)/;
+var _KNOWN_SITE_RE = /^(?:69shux|69shnx|69shu|69shuba|69xinshu|69yuedu|69shuh|69shuw|twkan|twaakan|twkaan|uukanshu|biquge|xbiquge|bqg|5200|quanben|piaotia|ptwxz|shuquge|shubaow)/;
+var _DOMAIN_RE = /(?:https?:\/\/)?(?:www\.)?([a-z0-9][a-z0-9\-]{1,28})\.(com|net|org|cc|co|me|pro|vip|xyz|top|la|tw|cn|info|io|app|site|club|live|tv|pw|icu|wang|xin|fun|ink|work|run|ren|one|biz)/g;
+var _REVERSED_DOMAIN_RE = /(?:moc|ten|gro|cc|oc|em|orp|piv|zyx|pot|nc|wt)\.(?:xuhs96?|uhs96?|abuhs96?|nakwt|uhsnakuu|eguqib)/g;
+
+function _hasBannerAnchor(s) {
+    if (s.indexOf('(-_-)') !== -1 || s.indexOf('.o0×X×0o.') !== -1) return true;
+    for (var i = 0; i < s.length; ) {
+        var r = _codePointAtCompat(s, i);
+        if (_isStrongDecorativeCp(r.cp)) return true;
+        i += r.len;
+    }
+    return false;
+}
+
+function _expandWrapper(seg, start, end) {
+    var leftLimit = Math.max(0, start - 48);
+    var rightLimit = Math.min(seg.length, end + 48);
+
+    var leftCursor = start;
+    var leftStrong = false;
+    while (leftCursor > leftLimit) {
+        var prefix = seg.substring(leftLimit, leftCursor);
+        var lm = _LEFT_BANNER_RE.exec(prefix);
+        if (lm && lm[0] && _hasBannerAnchor(lm[0])) {
+            var nextL = leftLimit + lm.index;
+            if (nextL < leftCursor) {
+                leftCursor = nextL;
+                leftStrong = true;
                 continue;
             }
         }
-        if (_isCombiningOrInvisible(hi)) continue;
-        if (hi >= 0xff01 && hi <= 0xff5e) {
-            hi -= 0xfee0;
-        }
-        var mapped = _BMP_SPECIAL_MAP[hi];
-        if (mapped) {
-            out += mapped;
-        } else if (hi >= 65 && hi <= 90) {
-            out += String.fromCharCode(hi + 32);
+        var prev = _codePointBeforeCompat(seg, leftCursor);
+        if (_isStrongDecorativeCp(prev.cp)) {
+            leftCursor -= prev.len;
+            leftStrong = true;
+        } else if (_isInlineSpaceCp(prev.cp) || (prev.cp <= 0xffff && _isCombiningOrInvisible(prev.cp))) {
+            leftCursor -= prev.len;
         } else {
-            out += String.fromCharCode(hi);
+            break;
         }
     }
+    var newStart = leftStrong ? leftCursor : start;
+    if (leftStrong) {
+        while (newStart < start && seg.charAt(newStart) === ' ') newStart++;
+    }
+
+    var rightCursor = end;
+    var rightStrong = false;
+    while (rightCursor < rightLimit) {
+        var suffix = seg.substring(rightCursor, rightLimit);
+        var rm = _RIGHT_BANNER_RE.exec(suffix);
+        if (rm && rm[0] && _hasBannerAnchor(rm[0])) {
+            var nextR = rightCursor + rm[0].length;
+            if (nextR > rightCursor) {
+                rightCursor = nextR;
+                rightStrong = true;
+                continue;
+            }
+        }
+        var next = _codePointAtCompat(seg, rightCursor);
+        if (_isStrongDecorativeCp(next.cp)) {
+            rightCursor += next.len;
+            rightStrong = true;
+        } else if (_isInlineSpaceCp(next.cp) || (next.cp <= 0xffff && _isCombiningOrInvisible(next.cp))) {
+            rightCursor += next.len;
+        } else {
+            break;
+        }
+    }
+    var newEnd = rightStrong ? rightCursor : end;
+    if (rightStrong) {
+        while (newEnd > end && seg.charAt(newEnd - 1) === ' ') newEnd--;
+    }
+
+    if (newStart < start) {
+        while (newStart < start && '.,\''.indexOf(seg.charAt(newStart)) !== -1 &&
+            seg.substring(newStart, newStart + 9) !== '.o0×X×0o.' &&
+            (newStart + 1 >= start || !_isStrongDecorativeCp(_codePointAtCompat(seg, newStart + 1).cp))) {
+            newStart++;
+        }
+    }
+    if (newEnd > end) {
+        while (newEnd > end && '.,\''.indexOf(seg.charAt(newEnd - 1)) !== -1 &&
+            (newEnd < 9 || seg.substring(newEnd - 9, newEnd) !== '.o0×X×0o.') &&
+            (newEnd - 1 <= end || !_isStrongDecorativeCp(_codePointBeforeCompat(seg, newEnd - 1).cp))) {
+            newEnd--;
+        }
+    }
+
+    return { start: newStart, end: newEnd, symmetric: leftStrong && rightStrong };
+}
+
+function _stripInlineDomainsAndShells(seg) {
+    if (!seg || seg.length < 4) return seg;
+
+    var sChars = [], sStart = [], sEnd = [], sObf = [];
+    var cChars = [], cStart = [], cEnd = [], cObf = [], cSkip = [];
+    var pendingNoise = false;
+
+    for (var i = 0; i < seg.length; ) {
+        var r = _codePointAtCompat(seg, i);
+        var cp = r.cp;
+        var nextI = i + r.len;
+
+        if (cp <= 0xffff && _isCombiningOrInvisible(cp)) {
+            if (sChars.length > 0 && sChars[sChars.length - 1] !== '\u0000') {
+                sEnd[sEnd.length - 1] = nextI;
+                sObf[sObf.length - 1] = true;
+            }
+            if (cChars.length > 0 && cChars[cChars.length - 1] !== '\u0000') {
+                cEnd[cEnd.length - 1] = nextI;
+                cObf[cObf.length - 1] = true;
+            }
+            i = nextI;
+            continue;
+        }
+
+        var m = _mapWatermarkCodePoint(cp);
+        if (m) {
+            sChars.push(m.ch); sStart.push(i); sEnd.push(nextI); sObf.push(m.obf);
+            cChars.push(m.ch); cStart.push(i); cEnd.push(nextI); cObf.push(m.obf); cSkip.push(pendingNoise);
+            pendingNoise = false;
+        } else {
+            sChars.push('\u0000'); sStart.push(i); sEnd.push(nextI); sObf.push(false);
+            if (_isInterleaveNoiseCp(cp)) {
+                pendingNoise = true;
+            } else {
+                cChars.push('\u0000'); cStart.push(i); cEnd.push(nextI); cObf.push(false); cSkip.push(false);
+                pendingNoise = false;
+            }
+        }
+        i = nextI;
+    }
+
+    var spans = [];
+    function scanProj(chars, starts, ends, obfs, skips, isCompact) {
+        var text = chars.join('');
+        var m;
+        _DOMAIN_RE.lastIndex = 0;
+        while ((m = _DOMAIN_RE.exec(text)) !== null) {
+            var idx = m.index;
+            var last = idx + m[0].length - 1;
+            var core = m[1];
+            var oStart = starts[idx];
+            var oEnd = ends[last];
+            if (isCompact && (oEnd - oStart) > m[0].length * 4 + 6) continue;
+            var obfCount = 0;
+            var skipCount = 0;
+            for (var k = idx; k <= last; k++) {
+                if (obfs[k]) obfCount++;
+                if (isCompact && k > idx && skips[k]) skipCount++;
+            }
+            var isKnown = _KNOWN_SITE_RE.test(core);
+            var hasPrefix = m[0].indexOf('www.') === 0 || m[0].indexOf('http://') === 0 || m[0].indexOf('https://') === 0;
+            var exp = _expandWrapper(seg, oStart, oEnd);
+            if (isKnown || obfCount >= 2 || (skipCount >= 3 && core.length >= 4) || hasPrefix || exp.symmetric) {
+                spans.push({ start: exp.start, end: exp.end });
+            }
+        }
+        _REVERSED_DOMAIN_RE.lastIndex = 0;
+        while ((m = _REVERSED_DOMAIN_RE.exec(text)) !== null) {
+            var rIdx = m.index;
+            var rLast = rIdx + m[0].length - 1;
+            var rStart = starts[rIdx];
+            var rEnd = ends[rLast];
+            if (isCompact && (rEnd - rStart) > m[0].length * 4 + 4) continue;
+            var rExp = _expandWrapper(seg, rStart, rEnd);
+            spans.push({ start: rExp.start, end: rExp.end });
+        }
+    }
+
+    scanProj(sChars, sStart, sEnd, sObf, null, false);
+    scanProj(cChars, cStart, cEnd, cObf, cSkip, true);
+
+    // Vỏ watermark rỗng: `[2+ emoji/symbol][2+ khoảng trắng rộng \u2003][2+ emoji/symbol]`
+    for (var p = 0; p < seg.length; ) {
+        var pr = _codePointAtCompat(seg, p);
+        if (!_isWideSpaceCp(pr.cp)) { p += pr.len; continue; }
+        var spStart = p;
+        var spCount = 0;
+        while (p < seg.length) {
+            var sr = _codePointAtCompat(seg, p);
+            if (_isWideSpaceCp(sr.cp)) { spCount++; p += sr.len; }
+            else if (sr.cp === 32) { p += 1; }
+            else break;
+        }
+        var spEnd = p;
+        if (spCount < 2) continue;
+
+        var left = spStart, leftCnt = 0;
+        while (left > 0 && leftCnt < 5) {
+            var lr = _codePointBeforeCompat(seg, left);
+            if (lr.cp <= 0xffff && _isCombiningOrInvisible(lr.cp)) left -= lr.len;
+            else if (_isStrongDecorativeCp(lr.cp)) { left -= lr.len; leftCnt++; }
+            else break;
+        }
+        var right = spEnd, rightCnt = 0;
+        while (right < seg.length && rightCnt < 5) {
+            var rr = _codePointAtCompat(seg, right);
+            if (rr.cp <= 0xffff && _isCombiningOrInvisible(rr.cp)) right += rr.len;
+            else if (_isStrongDecorativeCp(rr.cp)) { right += rr.len; rightCnt++; }
+            else break;
+        }
+        if (leftCnt >= 2 && rightCnt >= 2) {
+            spans.push({ start: left, end: right });
+            p = right;
+        }
+    }
+
+    if (!spans.length) return seg;
+    spans.sort(function (a, b) { return a.start - b.start; });
+    var merged = [spans[0]];
+    for (var mIdx = 1; mIdx < spans.length; mIdx++) {
+        var prevSpan = merged[merged.length - 1];
+        if (spans[mIdx].start <= prevSpan.end) {
+            if (spans[mIdx].end > prevSpan.end) prevSpan.end = spans[mIdx].end;
+        } else {
+            merged.push(spans[mIdx]);
+        }
+    }
+    var out = '';
+    var cur = 0;
+    for (var j = 0; j < merged.length; j++) {
+        if (merged[j].start > cur) out += seg.substring(cur, merged[j].start);
+        if (merged[j].end > cur) cur = merged[j].end;
+    }
+    if (cur < seg.length) out += seg.substring(cur);
     return out;
 }
 
@@ -337,24 +675,23 @@ function _isWatermarkLine(line) {
     var norm = normalizeForWatermarkCheck(plain).trim();
     if (!norm) return true;
 
+    // CHỈ xóa nguyên dòng nếu đó là câu quảng cáo đứng riêng lẻ (KHÔNG xóa đoạn văn truyện dài
+    // vô tình nhắc từ khóa — watermark inline đã được _stripInlineWatermarks cắt riêng ở bước trước).
+    if (norm.length > 140) return false;
+
     var compact = norm.replace(/[\s\u3000\u2003\u2002\u00a0\-_→➔>·•,，.。!！?？:：;；【】（）()《》「」『』\[\]]+/g, '');
 
-    if (norm.indexOf('twkan.com') !== -1 || compact.indexOf('twkancom') !== -1) return true;
-    if (norm.indexOf('69shux.com') !== -1 || compact.indexOf('69shuxcom') !== -1) return true;
-    if (norm.indexOf('69shuba.com') !== -1 || compact.indexOf('69shubacom') !== -1) return true;
-    if (norm.indexOf('69shu.com') !== -1 || compact.indexOf('69shucom') !== -1) return true;
     if (/google\s*搜索\s*twkan/i.test(norm)) return true;
-    if (compact.indexOf('twkan') !== -1 && norm.length < 80) return true;
+    if (compact.indexOf('twkan') !== -1 && norm.length < 60) return true;
 
     var hasSiteName = /台灣小說網|臺灣小[說説]網|台湾小说网/.test(norm);
     if (hasSiteName && /首發|首发|記住|记住|域名|超全|超好用|超讚|超赞|超實用|超实用|超靠譜|超靠谱|超便捷|輕鬆讀|轻松读|等你尋|等你寻|書庫多|书库多|解書荒|解书荒|解無聊|解无聊|無錯章節|无错章节|無亂序|无乱序|隨時看|随时看|好書|好书|追台灣小說|追台湾小说|→/.test(norm)) {
         return true;
     }
 
-    if (/本書由.*全網首發|本书由.*全网首发/.test(norm)) return true;
-    if (/本書首發.*(?:提供給你無錯章節|無亂序章節)|本书首发.*(?:提供给你无错章节|无乱序章节)/.test(norm)) return true;
-    if (/記住首發網站域名|记住首发网站域名/.test(norm)) return true;
-    if (/記住本站域名|记住本站域名/.test(norm)) return true;
+    if (/^(?:本書由|本书由).*(?:全網首發|全网首发)/.test(norm)) return true;
+    if (/^(?:本書首發|本书首发).*(?:提供給你無錯章節|無亂序章節|提供给你无错章节|无乱序章节)/.test(norm)) return true;
+    if (/^(?:請)?(?:記住首發網站域名|记住首发网站域名|記住本站域名|记住本站域名)/.test(norm)) return true;
     if (/寫到這裡我希望讀者記一下我們域名|写到这里我希望读者记一下我们域名/.test(norm)) return true;
     if (/(?:請記住|请记住).*(?:觀看最快的章節更新|观看最快的章节更新)/.test(norm)) return true;
     if (/麻煩您動動手指.*分享到facebook|麻烦您动动手指.*分享到facebook/i.test(norm)) return true;
@@ -363,11 +700,16 @@ function _isWatermarkLine(line) {
 }
 
 function _stripInlineWatermarks(line) {
-    return String(line || '')
+    var s = String(line || '')
         .replace(/【[^】]*(?:記住本站域名|记住本站域名|寫到這裡我希望讀者記一下|麻煩您動動手指|把本網站分享到Facebook|台灣小說網|臺灣小[說説]網)[^】]*】/gi, '')
         .replace(/[（(][^）)]*(?:請記住|请记住)[^）)]*(?:觀看最快的章節更新|观看最快的章节更新|台灣小說網|臺灣小[說説]網)[^）)]*[）)]/gi, '')
         .replace(/💘🎈[^\n<]*♨🐧/g, '')
-        .trim();
+        .replace(/\|!¤\*'~``~'\*¤!\|\s+\|!¤\*'~``~'\*¤!\|/g, '')
+        .replace(/\(¯`·\.¸¸\.·´¯`·\.¸¸\.(?:->|-&gt;)\s+(?:<-|&lt;-)\.¸¸\.·´¯`·\.¸¸\.·´¯\)/g, '')
+        .replace(/ıllıllı\s+ıllıllı/g, '')
+        .replace(/,-\*\x27\s*\^\s*\x27~\*-\.,_,\.-\*~\s+~\*-\.,_,\.-\*~\x27\s*\^\s*\x27\*-,\s*/g, '');
+    s = _stripInlineDomainsAndShells(s);
+    return s.replace(/^[\s\u00a0\u2002\u2003\u3000]+|[\s\u00a0\u2002\u2003\u3000]+$/g, '');
 }
 
 function cleanChapterHtmlDetailed(html) {

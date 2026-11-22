@@ -2,7 +2,7 @@
   "metadata": {
     "name": "twkan Pro",
     "author": "ducbui0",
-    "version": 2,
+    "version": 3,
     "source": "https://twkan.com",
     "regexp": "twkan\\.com/(txt|book)/.*",
     "description": "Đọc truyện chữ Trung trên twkan.com (cải tiến: giải mã canvas sec-last, tự cảnh báo khi web đổi khóa giải mã, lọc triệt để watermark quảng cáo, làm sạch mô tả).",
